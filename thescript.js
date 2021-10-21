@@ -1,8 +1,7 @@
 let link = window.location.href
 	.replace('/en/assignments', '/qlearn/v1/schedule')
 	.replace('topics', 'topic')
-	.split('/questions').toString()
-	.split('/lessons')[0] + '/contents';
+	.split('/questions')[0] + '/contents';
 
 let headers = new Headers({
 	'Authorization': 'Token xd31sYEPWvR+ZWzJlLoMMqTr2XooH2uRZ5zKHDSkRyppdEB4116XvMRUp+RC3/6h1hbRzD/la4+pK6/4WeCVxw=='

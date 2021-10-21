@@ -7,16 +7,13 @@ let headers = new Headers({
 	'Authorization': 'Token xd31sYEPWvR+ZWzJlLoMMqTr2XooH2uRZ5zKHDSkRyppdEB4116XvMRUp+RC3/6h1hbRzD/la4+pK6/4WeCVxw=='
 });
 
-let response = fetch(link, {
+let response = await fetch(link, {
 	headers: headers,
 	method: 'GET'
 });
 
 
-
-
-
-let commits = response.json();
+let commits = await response.json();
 
 for (let i = 0; i < commits.number_of_questions; i++) {
 

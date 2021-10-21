@@ -19,7 +19,7 @@ for (let i = 0; i < commits.number_of_questions; i++) {
 
 	let _q = commits.questions[i];
 
-	console.log("\nQ", (i + 1), "(" + _q.answer_type + ")" + "\n> [" + _q.plain_text + "]");
+	console.log("\nQ", (i + 1), "/ " + (commits.number_of_questions), "(" + _q.answer_type + ")" + "\n> [" + _q.plain_text + "]");
 
 	switch (_q.answer_type) {
 		case "multiple_choice":

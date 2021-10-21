@@ -16,7 +16,7 @@ let response = fetch(link, {
 
 
 
-let commits = await response.json();
+let commits = response.json();
 
 for (let i = 0; i < commits.number_of_questions; i++) {
 

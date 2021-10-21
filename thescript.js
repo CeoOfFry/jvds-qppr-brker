@@ -52,6 +52,7 @@ for (let i = 0; i < commits.number_of_questions; i++) {
 
 		case "correct_order":
 			{
+				console.log("	(Follow this order)");
 				for (let j = 0; j < Object.keys(_q.choices).length; j++) {
 
 					let _ch = _q.choices[j];

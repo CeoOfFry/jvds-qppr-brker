@@ -29,9 +29,9 @@ for (let i = 0; i < commits.number_of_questions; i++) {
 					let _ch = _q.choices[j];
 
 					if (_ch.correct)
-						console.log("c	|", (j + 1), _ch.body[0].text);
+						console.log("correct |", (j + 1), _ch.body[0].text);
 					else
-						console.log("w	|", (j + 1), _ch.body[0].text);
+						console.log("wrong   |", (j + 1), _ch.body[0].text);
 				}
 			}
 			break;

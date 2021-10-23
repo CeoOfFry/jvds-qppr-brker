@@ -98,11 +98,11 @@ for (let i = 0; i < commits.number_of_questions; i++) {
                         for (let j = 0; j < l; j++) {
 
                             let _alt = _ch.alternatives[j];
-                            console.log("   " + _alt.text.trim());
+                            console.log("   " + "%c%s", "color: #9980FF", _alt.text.trim());
                         }
                     }
                     else {
-                        console.log("   " + _ch.alternatives[0].text.trim());
+                        console.log("   " + "%c%s", "color: #9980FF", _ch.alternatives[0].text.trim());
                     }
 
                     console.log("\n   [Case sensitive: " + (_q.case_sensitive ? "yes" : "no") + "]");
@@ -193,11 +193,11 @@ for (let i = 0; i < commits.number_of_questions; i++) {
                         for (let j = 0; j < l; j++) {
 
                             let _alt = _ch.alternatives[j];
-                            console.log("   " + _alt.text.trim());
+                            console.log("   " + "%c%s", "color: #9980FF", _alt.text.trim());
                         }
                     }
                     else {
-                        console.log("   The answer is " + _ch.alternatives[0].text.trim());
+                        console.log("   " + "%c%s", "color: #9980FF", _ch.alternatives[0].text.trim());
                     }
 
                     console.log("\n   [Case sensitive: " + (_q.case_sensitive ? "yes" : "no") + "]");

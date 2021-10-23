@@ -1,5 +1,7 @@
 //@ts-check
 
+console.clear();
+
 let url = window.location.href
 
 if (!url.includes("learn.quipper.com")) {

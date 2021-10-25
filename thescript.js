@@ -175,19 +175,19 @@ for (let i = 0; i < commits.number_of_questions; i++) {
 
 						if (isChImgLnk(_t)) {
 							if (_ch.correct) {
-								console.log("%ccorrect", "color: #9980FF", "|");
+								console.log("%cc  ", "color: #9980FF", "|");
 							}
 							else {
-								console.log("wrong   |");
+								console.log("w	|");
 							}
 							logImage(cleanChImgLnk(_t));
 						}
 						else {
 							if (_ch.correct) {
-								console.log("%ccorrect", "color: #9980FF", "|", clean(_t));
+								console.log("%cc  ", "color: #9980FF", "|", clean(_t));
 							}
 							else {
-								console.log("wrong   |", clean(_t));
+								console.log("w	|", clean(_t));
 							}
 						}
 					}

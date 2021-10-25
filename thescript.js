@@ -5,55 +5,62 @@ console.clear();
 let url = window.location.href
 
 if (!url.includes("learn.quipper.com")) {
-    alert("What\n\nThis script is supposed to be run on learn.quipper.com!");
-    throw new Error("This script is supposed to be run on learn.quipper.com!");
+	alert("What\n\nThis script is supposed to be run on learn.quipper.com!");
+	throw new Error("This script is supposed to be run on learn.quipper.com!");
 }
 else if (!url.includes("/en/assignments")) {
-    alert("This script will only work on assignments (still incompatible with exams)\n\nPlease run the script on the page of any assignment");
-    throw new Error("Please run the script on the page of any assignment");
+	alert("This script will only work on assignments (still incompatible with exams)\n\nPlease run the script on the page of any assignment");
+	throw new Error("Please run the script on the page of any assignment");
 }
 else if (!url.includes("topics") || !url.includes("/questions")) {
-    alert("Please re-run the script on the page of the first question");
-    throw new Error("Please re-run the script on the page of the first question");
+	alert("Please re-run the script on the page of the first question");
+	throw new Error("Please re-run the script on the page of the first question");
 }
 
 let link = url
-    .replace("/en/assignments", "/qlearn/v1/schedule")
-    .replace("topics", "topic")
-    .split("/questions")[0] + "/contents";
+	.replace("/en/assignments", "/qlearn/v1/schedule")
+	.replace("topics", "topic")
+	.split("/questions")[0] + "/contents";
 
 let headers = new Headers({
-    "Authorization": "Token xd31sYEPWvR+ZWzJlLoMMqTr2XooH2uRZ5zKHDSkRyppdEB4116XvMRUp+RC3/6h1hbRzD/la4+pK6/4WeCVxw=="
+	"Authorization": "Token xd31sYEPWvR+ZWzJlLoMMqTr2XooH2uRZ5zKHDSkRyppdEB4116XvMRUp+RC3/6h1hbRzD/la4+pK6/4WeCVxw=="
 });
 
+// @ts-ignore
 let response = await fetch(link, {
-    headers: headers,
-    method: "GET"
+	headers: headers,
+	method: "GET"
 });
 
 //
 
-let opt_quick = prompt(
-    "Use quick mode?"
-    + "\n"
-    + "\nQuick mode will only show what you need: the number of questions with their correct answer(s)"
-    + "\n"
-    + "\n(Type y or n)"
-);
+let quickMode = false;
+quickMode = prompt(
+	"Use quick mode?"
+	+ "\n"
+	+ "\nQuick mode will only show what you need: the number of questions with their correct answer(s)"
+	+ "\n> Useful if you just want to compelete the assignment"
+	+ "\n"
+	+ "\n(Type y or n)"
+).toLowerCase() == "y";
 
-if (opt_quick == null) {
-    throw new Error("exited script");
-}
-
-let quickMode = opt_quick.toLowerCase() == "y";
+let includeSearch = quickMode ? false : prompt(
+	"Inlude search results?"
+	+ "\n"
+	+ "\nEnabling this will include google search results for each question"
+	+ "\n> Useful if you want to learn about the question/answer"
+	+ "\n"
+	+ "\n(Type y or n)"
+).toLowerCase() == "y";
 
 //
 
+// @ts-ignore
 let commits = await response.json();
 
 let qShuffled = commits.shuffle_questions;
 if (qShuffled) {
-    console.log("%c[!] WARNING: For this specific assignment, questions are shuffled [!]\n[Question numbers may not be accurate]", "color: #9980FF");
+	console.log("%c[!] WARNING: For this specific assignment, questions are shuffled [!]\n[Question numbers may not be accurate]", "color: #9980FF");
 }
 
 console.log("[" + link + "]\n\n");
@@ -61,215 +68,243 @@ console.log("-\n\n[" + commits.name + "]");
 
 for (let i = 0; i < commits.number_of_questions; i++) {
 
-    let _q = commits.questions[i];
+	let _q = commits.questions[i];
 
-    if (quickMode) {
-        console.log("\n", (i + 1), ":")
+	if (quickMode) {
+		console.log("\n", (i + 1), ":")
 
-        switch (_q.answer_type) {
-            case "multiple_choice":
-                {
-                    for (let j = 0; j < Object.keys(_q.choices).length; j++) {
+		switch (_q.answer_type) {
+			case "multiple_choice":
+				{
+					for (let j = 0; j < Object.keys(_q.choices).length; j++) {
 
-                        let _ch = _q.choices[j];
+						let _ch = _q.choices[j];
 
-                        if (_ch.correct) {
-                            let _t = _ch.body[0].text;
+						if (_ch.correct) {
+							let _t = _ch.body[0].text;
 
-                            if (_t.includes("https://")) {
-                                console.log("   | ");
-                                logImage(_t.split("](")[1].replace(")", ""));
-                            }
-                            else {
-                                console.log("   | " + clean(_t));
-                            }
-                        }
-                    }
-                }
-                break;
+							if (isChImgLnk(_t)) {
+								console.log("   | ");
+								logImage(cleanChImgLnk(_t));
+							}
+							else {
+								console.log("   | " + clean(_t));
+							}
+						}
+					}
+				}
+				break;
 
-            case "exact_value":
-                {
-                    let _ch = _q.choices[0]
-                    let l = Object.keys(_ch.alternatives).length;
+			case "exact_value":
+				{
+					let _ch = _q.choices[0]
+					let l = Object.keys(_ch.alternatives).length;
 
-                    if (l > 1) {
-                        console.log("   [", l, "valid answers ]:")
-                        for (let j = 0; j < l; j++) {
+					if (l > 1) {
+						console.log("   [", l, "valid answers ]:")
+						for (let j = 0; j < l; j++) {
 
-                            let _alt = _ch.alternatives[j];
-                            console.log("   " + "%c%s", "color: #9980FF", _alt.text.trim());
-                        }
-                    }
-                    else {
-                        console.log("   " + "%c%s", "color: #9980FF", _ch.alternatives[0].text.trim());
-                    }
+							let _alt = _ch.alternatives[j];
+							console.log("   " + "%c%s", "color: #9980FF", _alt.text.trim());
+						}
+					}
+					else {
+						console.log("   " + "%c%s", "color: #9980FF", _ch.alternatives[0].text.trim());
+					}
 
-                    console.log("\n   [Case sensitive: " + (_q.case_sensitive ? "yes" : "no") + "]");
-                }
-                break;
+					console.log("\n   [Case sensitive: " + (_q.case_sensitive ? "yes" : "no") + "]");
+				}
+				break;
 
-            case "grouped_choices":
-                {
-                    console.log("	Question type still unsupported by the cheat.");
-                }
-                break;
+			case "grouped_choices":
+				{
+					console.log("	Question type still unsupported by the cheat.");
+				}
+				break;
 
-            case "correct_order":
-                {
-                    for (let j = 0; j < Object.keys(_q.choices).length; j++) {
+			case "correct_order":
+				{
+					for (let j = 0; j < Object.keys(_q.choices).length; j++) {
 
-                        let _ch = _q.choices[j];
+						let _ch = _q.choices[j];
 
-                        console.log("  ", (j + 1), clean(_ch.body[0].text));
-                    }
-                }
-                break;
+						console.log("  ", (j + 1), clean(_ch.body[0].text));
+					}
+				}
+				break;
 
-            case "categorise":
-                {
-                    for (let j = 0; j < Object.keys(_q.choices).length; j++) {
+			case "categorise":
+				{
+					for (let j = 0; j < Object.keys(_q.choices).length; j++) {
 
-                        let _ch = _q.choices[j];
+						let _ch = _q.choices[j];
 
-                        for (let z = 0; z < Object.keys(_q.answer_categories).length; z++) {
+						for (let z = 0; z < Object.keys(_q.answer_categories).length; z++) {
 
-                            let _cat = _q.answer_categories[z];
-                            if (_cat.id == _ch.answer_category_id) {
-                                console.log("   " + clean(_ch.body[0].text) + " :");
-                                console.log("        | " + "%c%s", "color: #9980FF", _cat.section.text.trim());
-                            }
-                        }
-                    }
-                }
-                break;
+							let _cat = _q.answer_categories[z];
+							if (_cat.id == _ch.answer_category_id) {
+								console.log("   " + clean(_ch.body[0].text) + " :");
+								console.log("        | " + "%c%s", "color: #9980FF", _cat.section.text.trim());
+							}
+						}
+					}
+				}
+				break;
 
-            default:
-                {
-                    console.log("	Question type either invalid or unsupported by the cheat.");
-                }
-                break;
-        }
-    }
-    else {
-        console.log("\nQ", (i + 1), "/ " + (commits.number_of_questions), "(" + _q.answer_type + ")" + "\n[" + clean(_q.plain_text) + "]");
+			default:
+				{
+					console.log("	Question type either invalid or unsupported by the cheat.");
+				}
+				break;
+		}
+	}
+	else {
+		console.log(
+			"\nQ", (i + 1), "/ " + (commits.number_of_questions), "(" + _q.answer_type + ")" +
+			(includeSearch ? " [" + "https://www.google.com/search?q=" + encodeURI(clean(_q.plain_text)) + "]" : "") +
+			"\n" + clean(_q.plain_text)
+		);
 
-        switch (_q.answer_type) {
-            case "multiple_choice":
-                {
-                    for (let j = 0; j < Object.keys(_q.choices).length; j++) {
+		switch (_q.answer_type) {
+			case "multiple_choice":
+				{
+					for (let j = 0; j < Object.keys(_q.choices).length; j++) {
 
-                        let _ch = _q.choices[j];
-                        let _t = _ch.body[0].text;
+						let _ch = _q.choices[j];
+						let _t = _ch.body[0].text;
 
-                        if (_t.includes("https://")) {
-                            if (_ch.correct) {
-                                console.log("%ccorrect", "color: #9980FF", "|");
-                            }
-                            else {
-                                console.log("wrong   |");
-                            }
-                            logImage(_t.split("](")[1].replace(")", ""));
-                        }
-                        else {
-                            if (_ch.correct) {
-                                console.log("%ccorrect", "color: #9980FF", "|", clean(_ch.body[0].text));
-                            }
-                            else {
-                                console.log("wrong   |", clean(_ch.body[0].text));
-                            }
-                        }
-                    }
-                }
-                break;
+						if (isChImgLnk(_t)) {
+							if (_ch.correct) {
+								console.log("%ccorrect", "color: #9980FF", "|");
+							}
+							else {
+								console.log("wrong   |");
+							}
+							logImage(cleanChImgLnk(_t));
+						}
+						else {
+							if (_ch.correct) {
+								console.log("%ccorrect", "color: #9980FF", "|", clean(_t));
+							}
+							else {
+								console.log("wrong   |", clean(_t));
+							}
+						}
+					}
+				}
+				break;
 
-            case "exact_value":
-                {
-                    let _ch = _q.choices[0]
-                    let l = Object.keys(_ch.alternatives).length;
+			case "exact_value":
+				{
+					let _ch = _q.choices[0]
+					let l = Object.keys(_ch.alternatives).length;
 
-                    if (l > 1) {
-                        console.log("   [", l, "valid answers ]:")
-                        for (let j = 0; j < l; j++) {
+					if (l > 1) {
+						console.log("   [", l, "valid answers ]:")
+						for (let j = 0; j < l; j++) {
 
-                            let _alt = _ch.alternatives[j];
-                            console.log("   " + "%c%s", "color: #9980FF", _alt.text.trim());
-                        }
-                    }
-                    else {
-                        console.log("   " + "%c%s", "color: #9980FF", _ch.alternatives[0].text.trim());
-                    }
+							let _alt = _ch.alternatives[j];
+							console.log("   " + "%c%s", "color: #9980FF", _alt.text.trim());
+						}
+					}
+					else {
+						console.log("   " + "%c%s", "color: #9980FF", _ch.alternatives[0].text.trim());
+					}
 
-                    console.log("\n   [Case sensitive: " + (_q.case_sensitive ? "yes" : "no") + "]");
-                }
-                break;
+					console.log("\n   [Case sensitive: " + (_q.case_sensitive ? "yes" : "no") + "]");
+				}
+				break;
 
-            case "grouped_choices":
-                {
-                    console.log("	Question type still unsupported.");
-                }
-                break;
+			case "grouped_choices":
+				{
+					console.log("	Question type still unsupported.");
+				}
+				break;
 
-            case "correct_order":
-                {
-                    console.log("	 [Arrange the items in this order]");
-                    for (let j = 0; j < Object.keys(_q.choices).length; j++) {
+			case "correct_order":
+				{
+					console.log("	 [Arrange the items in this order]");
+					for (let j = 0; j < Object.keys(_q.choices).length; j++) {
 
-                        let _ch = _q.choices[j];
+						let _ch = _q.choices[j];
 
-                        console.log("	", (j + 1), clean(_ch.body[0].text));
-                    }
-                }
-                break;
+						console.log("	", (j + 1), clean(_ch.body[0].text));
+					}
+				}
+				break;
 
-            case "categorise":
-                {
-                    for (let j = 0; j < Object.keys(_q.choices).length; j++) {
+			case "categorise":
+				{
+					for (let j = 0; j < Object.keys(_q.choices).length; j++) {
 
-                        let _ch = _q.choices[j];
+						let _ch = _q.choices[j];
 
-                        for (let z = 0; z < Object.keys(_q.answer_categories).length; z++) {
+						for (let z = 0; z < Object.keys(_q.answer_categories).length; z++) {
 
-                            let _cat = _q.answer_categories[z];
-                            if (_cat.id == _ch.answer_category_id) {
-                                console.log("   " + clean(_ch.body[0].text) + " :");
-                                console.log("        | " + "%c%s", "color: #9980FF", _cat.section.text.trim());
-                            }
-                        }
-                    }
-                }
-                break;
+							let _cat = _q.answer_categories[z];
+							if (_cat.id == _ch.answer_category_id) {
+								console.log("   " + clean(_ch.body[0].text) + " :");
+								console.log("        | " + "%c%s", "color: #9980FF", _cat.section.text.trim());
+							}
+						}
+					}
+				}
+				break;
 
-            default:
-                {
-                    console.log("	Question type either invalid or unsupported.");
-                }
-                break;
-        }
+			default:
+				{
+					console.log("	Question type either invalid or unsupported.");
+				}
+				break;
+		}
 
-        if (Object.keys(_q.explanation).length > 0) {
-            let exp = clean(_q.explanation[0].text);
-            console.log("\n> " + "%cExplanation:", "color: #707070", exp);
-        }
-    }
+		if (Object.keys(_q.explanation).length > 0) {
+			let exp = clean(_q.explanation[0].text);
+			console.log("\n> " + "%cExplanation:", "color: #707070", exp);
+		}
+	}
 }
 
 function removedHtml(str) {
-    var div = document.createElement("div");
-    div.innerHTML = str;
-    return div.innerText;
+	var div = document.createElement("div");
+	div.innerHTML = str;
+	return div.innerText;
+}
+
+function manageMath(str) {
+	return str
+		.replace(/\\lt/g, " < ")
+		.replace(/\\gt/g, " > ")
+		.replace(/=/g, " = ")
+		.replace(/\\cdots/g, "...")
+		.replace(/\\times/g, " x ");
 }
 
 function clean(str) {
-    return removedHtml(str.trim());
+	return removedHtml(manageMath(str)
+		.replace(/\[%/g, "")
+		.replace(/%\]/g, "")
+		.replace(/\s+\./g, ".")
+		.replace(/,/g, ", ")
+		.replace(/\s+\,/g, ",")
+	)
+		.replace(/\s+/g, " ")
+		.trim();
+}
+
+function isChImgLnk(str) {
+	return str.includes("![") && str.includes("](") && str.includes("http");
+}
+function cleanChImgLnk(str) {
+	return str.split("](")[1].replace(")", "");
 }
 
 function logImage(url) {
-    console.log("%c                                                                             ",
-        "font-size:1px; " +
-        "padding: " + 25 + "px " + 25 + "px;" +
-        "background:url(" + url + ") no-repeat;" +
-        "background-size: contain;");
+	console.log("%c                                                                             ",
+		"font-size:1px; " +
+		"padding: " + 25 + "px " + 25 + "px;" +
+		"background:url(" + url + ") no-repeat;" +
+		"background-size: contain;");
 }
 
 console.log("\n%c[!] Warning: choices may not be in corresponding order [!]", "color: #9980FF");

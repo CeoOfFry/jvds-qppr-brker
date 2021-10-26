@@ -47,7 +47,7 @@ quickMode = prompt(
 let includeSearch = quickMode ? false : prompt(
 	"Inlude search results?"
 	+ "\n"
-	+ "\nEnabling this will include google search results for each question. Not reliable in every case"
+	+ "\nEnabling this will include links to google search results for each question. Not reliable in every case"
 	+ "\n> Useful for learning the question/answer's topic"
 	+ "\n"
 	+ "\n(Type y or n)"

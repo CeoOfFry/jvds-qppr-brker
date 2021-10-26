@@ -27,10 +27,11 @@ let headers = new Headers({
 });
 
 // @ts-ignore
-let response = await fetch(link, {
-	headers: headers,
-	method: "GET"
-});
+let response = await fetch(link,
+	{
+		headers: headers,
+		method: "GET"
+	});
 
 //
 
@@ -47,7 +48,7 @@ quickMode = prompt(
 let includeSearch = quickMode ? false : prompt(
 	"Inlude search results?"
 	+ "\n"
-	+ "\nEnabling this will include links to google search results for each question. Not reliable in every case"
+	+ "\nEnabling this will include links to google search results of each question. Not reliable in every case"
 	+ "\n> Useful for learning the question/answer's topic"
 	+ "\n"
 	+ "\n(Type y or n)"
@@ -56,19 +57,19 @@ let includeSearch = quickMode ? false : prompt(
 //
 
 // @ts-ignore
-let commits = await response.json();
+let ct = await response.json();
 
-let qShuffled = commits.shuffle_questions;
+let qShuffled = ct.shuffle_questions;
 if (qShuffled) {
 	console.log("%c[!] WARNING: For this specific assignment, questions are shuffled [!]\n[Question numbers may not be accurate]", "color: #9980FF");
 }
 
 console.log("[" + link + "]\n\n");
-console.log("-\n\n[" + commits.name + "]");
+console.log("-\n\n[" + ct.name + "]");
 
-for (let i = 0; i < commits.number_of_questions; i++) {
+for (let i = 0; i < ct.number_of_questions; i++) {
 
-	let _q = commits.questions[i];
+	let _q = ct.questions[i];
 
 	if (quickMode) {
 		console.log("\n", (i + 1), ":")
@@ -160,7 +161,7 @@ for (let i = 0; i < commits.number_of_questions; i++) {
 	}
 	else {
 		console.log(
-			"\nQ", (i + 1), "/ " + (commits.number_of_questions), "(" + _q.answer_type + ")" +
+			"\nQ", (i + 1), "/ " + (ct.number_of_questions), "(" + _q.answer_type + ")" +
 			(includeSearch ? " [" + "https://www.google.com/search?q=" + encodeURI(clean(_q.plain_text)) + "]" : "") +
 			"\n" + clean(_q.plain_text)
 		);

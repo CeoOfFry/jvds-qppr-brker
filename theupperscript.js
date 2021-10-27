@@ -16,7 +16,7 @@ let u = await response.json();
 
 console.log("[" + link + "]\n\n");
 
-let unanswered = "un: ";
+let unanswered = "unanswered questions: ";
 for (let i = 0; i < Object.keys(u[0].last_attempt_scores).length; i++) {
     console.log(i + 1, u[0].last_attempt_scores[i]);
     if (u[0].last_attempt_scores[i] == null) {
@@ -24,5 +24,5 @@ for (let i = 0; i < Object.keys(u[0].last_attempt_scores).length; i++) {
     }
 }
 
-console.log("\ncurrent %", u[0].correct_percent, "| answered questions", u[0].questions_count, "/", u[0].questions_answered_count, "| correct questions", u[0].questions_answered_count * (u[0].correct_percent / 100), "/", u[0].questions_count);
-if (unanswered != "un: ") console.log(unanswered);
+console.log("\n| current %", u[0].correct_percent, "\n| answered questions", u[0].questions_count, "/", u[0].questions_answered_count, "\n| correct questions", u[0].questions_answered_count * (u[0].correct_percent / 100), "/", u[0].questions_count);
+if (unanswered != "unanswered questions: ") console.log(unanswered);

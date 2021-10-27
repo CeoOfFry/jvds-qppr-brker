@@ -1,3 +1,5 @@
+console.clear();
+
 let link = window.location.href
     .replace("/en/exams", "/qlearn/v1/schedule")
     .split("/questions")[0] + "/usage";

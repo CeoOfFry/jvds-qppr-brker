@@ -24,5 +24,5 @@ for (let i = 0; i < Object.keys(u[0].last_attempt_scores).length; i++) {
     }
 }
 
-console.log("\n%", u[0].correct_percent, ": a", u[0].questions_count, "/", u[0].questions_answered_count, ": c", u[0].questions_answered_count * (u[0].correct_percent / 100), "/", u[0].questions_count);
+console.log("\ncurrent %", u[0].correct_percent, "| answered questions", u[0].questions_count, "/", u[0].questions_answered_count, "| correct questions", u[0].questions_answered_count * (u[0].correct_percent / 100), "/", u[0].questions_count);
 if (unanswered != "un: ") console.log(unanswered);

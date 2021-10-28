@@ -18,13 +18,23 @@ let u = await response.json();
 
 console.log("[" + link + "]\n\n");
 
-let unanswered = "unanswered questions: ";
+let wrong = "incorrectly answered questions: \n";
+let unanswered = "unanswered questions: \n";
 for (let i = 0; i < Object.keys(u[0].last_attempt_scores).length; i++) {
     console.log(i + 1, u[0].last_attempt_scores[i]);
-    if (u[0].last_attempt_scores[i] == null) {
-        unanswered = unanswered + (i + 1).toString() + ", ";
+    if (u[0].last_attempt_scores[i] == "incorrect") {
+        wrong = wrong + (i + 1).toString() + "\n";
+    }
+    else if (u[0].last_attempt_scores[i] == null) {
+        unanswered = unanswered + (i + 1).toString() + "\n";
     }
 }
 
-console.log("\n| current %", u[0].correct_percent, "\n| answered questions", u[0].questions_count, "/", u[0].questions_answered_count, "\n| correct questions", u[0].questions_answered_count * (u[0].correct_percent / 100), "/", u[0].questions_count);
-if (unanswered != "unanswered questions: ") console.log(unanswered);
+
+console.log(
+    "\n| current %", u[0].correct_percent,
+    "\n| answered questions", u[0].questions_answered_count, "/", u[0].questions_count,
+    "\n| correctly answered questions", u[0].questions_answered_count * (u[0].correct_percent / 100), "/", u[0].questions_count);
+
+if (wrong != "incorrectly answered questions: \n") console.log("\n" + wrong);
+if (unanswered != "unanswered questions: \n") console.log("\n" + unanswered);
